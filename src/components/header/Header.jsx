@@ -28,6 +28,23 @@ const Header = () => {
     setShowSearch(false);
   };
 
+  const searchQueryHandler = (e) => {
+    if (e.key === "Enter" && query.length > 0) {
+      navigate(`/search/${query}`);
+      setTimeout(() => {
+        setShowSearch(false);
+      }, 1000);
+    }
+  };
+
+  const navHandler = (type) => {
+    if (type === "movie") {
+      navigate("/explore/movie");
+    } else {
+      navigate("/explore/tv");
+    }
+    setMobileMenu(false);
+  };
   return (
     <header className={`header ${mobileMenu ? "mobileView" : ""} ${show}`}>
       <ContentWrapper>
@@ -35,14 +52,28 @@ const Header = () => {
           <img src={logo} alt="" />
         </div>
         <ul className="menuItems">
-          <li className="menuItem">Movies</li>
-          <li className="menuItem">Tv Shows</li>
+          <li
+            className="menuItem"
+            onClick={() => {
+              navHandler("movie");
+            }}
+          >
+            Movies
+          </li>
+          <li
+            className="menuItem"
+            onClick={() => {
+              navHandler("tv");
+            }}
+          >
+            Tv Shows
+          </li>
           <li className="menuItem">
-            <HiOutlineSearch />
+            <HiOutlineSearch onClick={openSearch} />
           </li>
         </ul>
         <div className="mobileMenuItems">
-          <HiOutlineSearch />
+          <HiOutlineSearch onClick={openSearch} />
           {mobileMenu ? (
             <VscChromeClose
               onClick={() => {
@@ -54,6 +85,23 @@ const Header = () => {
           )}
         </div>
       </ContentWrapper>
+      {showSearch && (
+        <div className="searchBar">
+          <ContentWrapper>
+            <div className="searchInput">
+              <input
+                type="text"
+                placeholder="Search here.."
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                }}
+                onKeyUp={searchQueryHandler}
+              />
+              <VscChromeClose onClick={() => setShowSearch(false)} />
+            </div>
+          </ContentWrapper>
+        </div>
+      )}
     </header>
   );
 };
